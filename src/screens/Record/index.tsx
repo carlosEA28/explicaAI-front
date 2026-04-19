@@ -1,6 +1,13 @@
-import { useState, type ChangeEvent, type CSSProperties } from "react"
+import {
+  useRef,
+  useState,
+  type ChangeEvent,
+  type CSSProperties,
+} from "react"
 import { CloudUpload, Mic } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
+import { getApiErrorMessage, uploadSummaryFile } from "@/api"
 import { AppSidebar } from "../../components/app-sidebar"
 import { Badge } from "../../components/ui/badge"
 import { Button } from "../../components/ui/button"
@@ -22,11 +29,41 @@ const acceptedExtensions = [
 ]
 
 const Record = () => {
+  const navigate = useNavigate()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadErrorMessage, setUploadErrorMessage] = useState<string | null>(
+    null
+  )
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    setSelectedFileName(file ? file.name : null)
+
+    if (!file) {
+      return
+    }
+
+    setSelectedFileName(file.name)
+    setUploadErrorMessage(null)
+    setIsUploading(true)
+
+    try {
+      const uploadedSummary = await uploadSummaryFile(file)
+      navigate(`/loading?externalId=${uploadedSummary.externalId}`)
+    } catch (error) {
+      setUploadErrorMessage(getApiErrorMessage(error))
+      setSelectedFileName(null)
+    } finally {
+      event.target.value = ""
+      setIsUploading(false)
+    }
+  }
+
+  const handleBrowseClick = () => {
+    if (!isUploading) {
+      fileInputRef.current?.click()
+    }
   }
 
   return (
@@ -75,6 +112,7 @@ const Record = () => {
                 </p>
 
                 <input
+                  ref={fileInputRef}
                   id="record-file-upload"
                   type="file"
                   accept={acceptedExtensions.join(",")}
@@ -83,13 +121,13 @@ const Record = () => {
                 />
 
                 <Button
-                  asChild
+                  type="button"
                   variant="outline"
+                  onClick={handleBrowseClick}
+                  disabled={isUploading}
                   className="mt-5 h-9 rounded-full border-[#d5d9e7] bg-white px-5 text-xs font-medium text-[#51576e] hover:bg-[#f6f8ff]"
                 >
-                  <label htmlFor="record-file-upload" className="cursor-pointer">
-                    Browse...
-                  </label>
+                  {isUploading ? "Uploading..." : "Browse..."}
                 </Button>
 
                 {selectedFileName ? (
@@ -98,6 +136,12 @@ const Record = () => {
                     title={selectedFileName}
                   >
                     {selectedFileName}
+                  </p>
+                ) : null}
+
+                {uploadErrorMessage ? (
+                  <p className="mt-2 max-w-[20rem] text-xs text-[#d04545]">
+                    {uploadErrorMessage}
                   </p>
                 ) : null}
 
