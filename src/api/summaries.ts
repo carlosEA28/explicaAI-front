@@ -17,8 +17,13 @@ export const uploadSummaryFile = async (
 }
 
 export const getSummaries = async (): Promise<SummaryListOutput> => {
-  const { data } = await apiClient.get<SummaryListOutput>("/summaries")
-  return data
+  const { data } = await apiClient.get<{
+    data: SummarySimpleOutput[] | null
+  }>("/summaries")
+
+  return {
+    data: Array.isArray(data?.data) ? data.data : [],
+  }
 }
 
 export const getSummaryByExternalId = async (

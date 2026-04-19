@@ -13,35 +13,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-
-const formatRelativeDate = (isoDate: string): string => {
-  const date = new Date(isoDate)
-  const now = new Date()
-  const oneDay = 24 * 60 * 60 * 1000
-  const diffInDays = Math.floor(
-    (new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() -
-      new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()) /
-      oneDay
-  )
-
-  if (diffInDays <= 0) {
-    return "Today"
-  }
-
-  if (diffInDays === 1) {
-    return "Yesterday"
-  }
-
-  return `${diffInDays} days ago`
-}
-
-const formatClockTime = (isoDate: string): string => {
-  const date = new Date(isoDate)
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  })
-}
+import {
+  formatSummaryClockTime,
+  formatSummaryRelativeDate,
+  getSummaryStatusLabel,
+} from "@/lib/summary"
 
 const metricCardGradient =
   "bg-[linear-gradient(140deg,#3444f8_0%,#4d31db_40%,#6544ff_100%)]"
@@ -101,7 +77,7 @@ const HomePage = () => {
         } as CSSProperties
       }
     >
-      <AppSidebar activeItem="Dashboard" />
+      <AppSidebar activeItem="Painel" />
 
       <SidebarInset className="bg-[#fbfcff] p-6 md:p-10 lg:p-12">
         <div className="mb-6 flex items-center justify-between md:hidden">
@@ -131,10 +107,10 @@ const HomePage = () => {
 
         <header className="mb-8">
           <h1 className="text-3xl leading-tight font-bold tracking-[-0.02em] text-[#1b1b24]">
-            Recent Insights
+            Resumos recentes
           </h1>
           <p className="mt-1 text-base text-[#62667a]">
-            Your latest curated AI meeting summaries.
+            Seus ultimos resumos de reunioes curados por IA.
           </p>
         </header>
 
@@ -155,23 +131,23 @@ const HomePage = () => {
             <div className="flex size-20 items-center justify-center rounded-full bg-[#eae7ee]">
               <LucideFile width={24} height={32} className="text-[#6f758f]" />
             </div>
-            <h2 className="text-2xl font-bold text-[#1B1B20]">No summaries yet</h2>
+            <h2 className="text-2xl font-bold text-[#1B1B20]">Nenhum resumo ainda</h2>
             <p className="text-base text-[#454655]">
-              Your recent meetings will appear here after processing.
+              Suas reunioes recentes aparecerao aqui apos o processamento.
             </p>
             <Button
               asChild
               className="mt-2 h-12 rounded-full bg-gradient-to-r from-[#000EB6] to-[#2532D3] px-8 text-white shadow-[0_20px_36px_-24px_rgba(0,14,182,0.75)] hover:from-[#000EB6] hover:to-[#2532D3]"
             >
-              <Link to="/record">New Recording</Link>
+              <Link to="/record">Nova gravacao</Link>
             </Button>
           </div>
         ) : (
           <section className="grid gap-4 lg:grid-cols-[1.25fr_1.1fr_0.75fr]">
             {latestSummaries.map((summary, index) => {
-              const cardTitle = summary.title ?? "Untitled Summary"
+              const cardTitle = summary.title ?? "Resumo sem titulo"
               const cardDescription =
-                summary.description ?? "No description generated yet."
+                summary.description ?? "Nenhuma descricao gerada ainda."
 
               if (index === 1) {
                 return (
@@ -182,7 +158,7 @@ const HomePage = () => {
                     <CardContent className="flex h-full min-h-[16rem] flex-col justify-between py-7">
                       <div className="flex items-center justify-between">
                         <Badge className="bg-white/20 text-[0.58rem] tracking-[0.08em] text-white uppercase">
-                          AI Efficiency
+                          Efetividade da IA
                         </Badge>
                         <Sparkles className="size-4 opacity-90" />
                       </div>
@@ -192,14 +168,14 @@ const HomePage = () => {
                           {metricGrowth}%
                         </p>
                         <p className="mt-2 text-sm text-white/85">
-                          of your summaries are fully processed.
+                          dos seus resumos estao totalmente processados.
                         </p>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <TrendingUp className="size-3.5" />
                         <span className="text-[0.62rem] font-medium tracking-[0.08em] text-white/85 uppercase">
-                          +{Math.max(1, Math.round(metricGrowth / 10))}% from last sync
+                          +{Math.max(1, Math.round(metricGrowth / 10))}% desde a ultima sincronizacao
                         </span>
                       </div>
                     </CardContent>
@@ -225,11 +201,11 @@ const HomePage = () => {
                           variant="outline"
                           className="border-[#d7dbec] bg-[#eff1fb] text-[0.56rem] text-[#5560a2] uppercase"
                         >
-                          {summary.status.replaceAll("_", " ")}
+                          {getSummaryStatusLabel(summary.status)}
                         </Badge>
                         <span className="inline-flex items-center gap-1 text-[0.62rem] font-medium tracking-[0.05em] text-[#8a90a7] uppercase">
                           <Clock3 className="size-3" />
-                          {formatRelativeDate(summary.updatedAt)}, {formatClockTime(summary.updatedAt)}
+                          {formatSummaryRelativeDate(summary.updatedAt)}, {formatSummaryClockTime(summary.updatedAt)}
                         </span>
                       </div>
 
@@ -242,10 +218,11 @@ const HomePage = () => {
                     </div>
 
                     <Button
+                      asChild
                       variant="link"
                       className="mt-6 h-auto w-fit p-0 text-xs font-semibold text-[#2f43df] hover:text-[#2335c8]"
                     >
-                      Review Transcript &gt;
+                      <Link to={`/history/${summary.externalId}`}>Revisar transcricao &gt;</Link>
                     </Button>
                   </CardContent>
                 </Card>

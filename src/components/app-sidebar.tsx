@@ -1,7 +1,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -10,27 +9,24 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar"
 import { cn } from "../lib/utils"
-import { History, LayoutDashboard, Mic, Plus, Settings } from "lucide-react"
+import { History, LayoutDashboard, Mic, Plus } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const navigationItems = [
   {
-    label: "Dashboard",
+    label: "Painel",
     icon: LayoutDashboard,
     href: "/",
   },
   {
-    label: "Record",
+    label: "Gravar",
     icon: Mic,
     href: "/record",
   },
   {
-    label: "History",
+    label: "Historico",
     icon: History,
-  },
-  {
-    label: "Settings",
-    icon: Settings,
+    href: "/history",
   },
 ]
 
@@ -38,7 +34,7 @@ type AppSidebarProps = {
   activeItem?: (typeof navigationItems)[number]["label"]
 }
 
-export function AppSidebar({ activeItem = "Dashboard" }: AppSidebarProps) {
+export function AppSidebar({ activeItem = "Painel" }: AppSidebarProps) {
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -55,19 +51,20 @@ export function AppSidebar({ activeItem = "Dashboard" }: AppSidebarProps) {
               ExplicAI
             </p>
             <p className="text-[0.67rem] font-medium tracking-[0.16em] text-[#8d90a0] uppercase">
-              The Digital Curator
+              Curadoria Digital
             </p>
           </div>
         </div>
 
-        <button
-          type="button"
-          disabled
-          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#000EB6] to-[#2532D3] text-sm font-medium text-white shadow-[0_20px_36px_-24px_rgba(0,14,182,0.75)] disabled:opacity-100"
+        <SidebarMenuButton
+          asChild
+          className="h-11 rounded-2xl bg-gradient-to-r from-[#000EB6] to-[#2532D3] text-sm font-medium text-white shadow-[0_20px_36px_-24px_rgba(0,14,182,0.75)] hover:bg-gradient-to-r hover:from-[#000EB6] hover:to-[#2532D3] hover:text-white"
         >
-          <Plus className="size-4" />
-          <span>New Meeting</span>
-        </button>
+          <Link to="/record">
+            <Plus className="size-4" />
+            <span>Nova Reuniao</span>
+          </Link>
+        </SidebarMenuButton>
       </SidebarHeader>
 
       <SidebarContent className="px-3 pt-4">
@@ -109,17 +106,6 @@ export function AppSidebar({ activeItem = "Dashboard" }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="px-5 pb-7">
-        <div className="flex items-center gap-3 rounded-xl bg-white/55 px-3 py-2 shadow-[0_24px_30px_-28px_rgba(25,33,68,0.9)]">
-          <div className="grid size-8 place-items-center rounded-full bg-[#33495a] text-[0.625rem] font-semibold text-white">
-            JD
-          </div>
-          <div className="leading-tight">
-            <p className="text-sm font-medium text-[#1f2635]">John Doe</p>
-            <p className="text-xs text-[#969cad]">Pro Plan</p>
-          </div>
-        </div>
-      </SidebarFooter>
     </Sidebar>
   )
 }

@@ -97,26 +97,26 @@ const Loading = () => {
 
     return [
       {
-        title: "Uploading file",
+        title: "Enviando arquivo",
         description: hasExternalId
-          ? "File received and queued for processing."
-          : "Preparing your file for upload.",
+          ? "Arquivo recebido e adicionado na fila de processamento."
+          : "Preparando seu arquivo para envio.",
         status: hasExternalId ? "completed" : "active",
       },
       {
-        title: "Transcribing audio",
+        title: "Transcrevendo audio",
         description:
           transcribingStatus === "failed"
-            ? "Transcription failed while processing this file."
-            : "Converting meeting speech into structured text.",
+            ? "A transcricao falhou durante o processamento deste arquivo."
+            : "Convertendo fala da reuniao em texto estruturado.",
         status: transcribingStatus,
       },
       {
-        title: "Generating summary",
+        title: "Gerando resumo",
         description:
           summaryStepStatus === "failed"
-            ? "Summary generation failed on the server."
-            : "Identifying key topics and action items.",
+            ? "A geracao do resumo falhou no servidor."
+            : "Identificando topicos-chave e itens de acao.",
         status: summaryStepStatus,
       },
     ]
@@ -193,7 +193,7 @@ const Loading = () => {
             <div className="text-center">
               <p className="text-lg leading-none font-semibold text-[#1530cf]">ExplicAI</p>
               <p className="mt-1 text-[0.58rem] font-medium tracking-[0.2em] text-[#9ea3bb] uppercase">
-                THE DIGITAL CURATOR
+                CURADORIA DIGITAL
               </p>
             </div>
 
@@ -222,7 +222,7 @@ const Loading = () => {
             <Card className="mt-12 w-full border border-[#e3e5f3] bg-[#edeef8] shadow-[0_28px_46px_-36px_rgba(30,37,75,0.75)]">
               <CardHeader className="pb-2">
                 <CardTitle className="text-[1.85rem] font-semibold text-[#242736]">
-                  Curating insights...
+                  Organizando insights...
                 </CardTitle>
               </CardHeader>
 
@@ -279,7 +279,7 @@ const Loading = () => {
                     className="h-auto p-0 text-xs font-semibold text-[#3f4fe3] hover:text-[#2a3ad5]"
                   >
                     <X className="size-3.5" />
-                    Cancel Process
+                    Cancelar processo
                   </Button>
                 </div>
               </CardContent>

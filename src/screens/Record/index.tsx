@@ -75,7 +75,7 @@ const Record = () => {
         } as CSSProperties
       }
     >
-      <AppSidebar activeItem="Record" />
+      <AppSidebar activeItem="Gravar" />
 
       <SidebarInset className="relative overflow-hidden bg-[#f8f8fc] p-6 md:p-12 lg:p-16">
         <div className="mb-6 flex items-center gap-3 md:hidden">
@@ -88,11 +88,11 @@ const Record = () => {
         <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center">
           <header className="mb-10 max-w-xl text-center md:mb-14">
             <h1 className="text-4xl leading-tight font-semibold tracking-[-0.03em] text-[#1f1f28] md:text-5xl">
-              Capture Intelligence
+              Capturar Inteligencia
             </h1>
             <p className="mt-3 text-base text-[#62667b]">
-              Upload an existing recording or start a live session for ExplicAI
-              to analyze and curate.
+              Envie uma gravacao existente ou inicie uma sessao ao vivo para o
+              ExplicAI analisar e organizar.
             </p>
           </header>
 
@@ -104,11 +104,11 @@ const Record = () => {
                 </div>
 
                 <h2 className="mt-6 text-3xl leading-none font-semibold text-[#24252f]">
-                  Upload File
+                  Enviar arquivo
                 </h2>
                 <p className="mt-3 max-w-[20rem] text-sm text-[#7a7f92]">
-                  Drag and drop your audio or video file here, or click to
-                  browse.
+                  Arraste e solte seu arquivo de audio ou video aqui, ou clique
+                  para selecionar.
                 </p>
 
                 <input
@@ -127,7 +127,7 @@ const Record = () => {
                   disabled={isUploading}
                   className="mt-5 h-9 rounded-full border-[#d5d9e7] bg-white px-5 text-xs font-medium text-[#51576e] hover:bg-[#f6f8ff]"
                 >
-                  {isUploading ? "Uploading..." : "Browse..."}
+                  {isUploading ? "Enviando..." : "Selecionar..."}
                 </Button>
 
                 {selectedFileName ? (
@@ -166,12 +166,20 @@ const Record = () => {
                 </div>
 
                 <h2 className="mt-6 text-3xl leading-none font-semibold text-[#24252f]">
-                  Live Record
+                  Gravacao ao vivo
                 </h2>
                 <p className="mt-3 max-w-[18rem] text-sm text-[#7a7f92]">
-                  Start a live transcription session. ExplicAI will capture and
-                  curate in real-time.
+                  Inicie uma sessao de transcricao ao vivo. O ExplicAI vai
+                  capturar e organizar em tempo real.
                 </p>
+
+                <Button
+                  type="button"
+                  onClick={() => navigate("/record/live")}
+                  className="mt-6 h-10 rounded-full bg-gradient-to-r from-[#000EB6] to-[#2532D3] px-6 text-xs font-semibold text-white shadow-[0_18px_30px_-18px_rgba(0,14,182,0.8)] hover:from-[#000EB6] hover:to-[#2532D3]"
+                >
+                  Iniciar sessao ao vivo
+                </Button>
               </CardContent>
             </Card>
           </section>
