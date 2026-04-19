@@ -11,31 +11,34 @@ import {
 } from "./ui/sidebar"
 import { cn } from "../lib/utils"
 import { History, LayoutDashboard, Mic, Plus, Settings } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const navigationItems = [
   {
     label: "Dashboard",
     icon: LayoutDashboard,
-    isActive: true,
+    href: "/",
   },
   {
     label: "Record",
     icon: Mic,
-    isActive: false,
+    href: "/record",
   },
   {
     label: "History",
     icon: History,
-    isActive: false,
   },
   {
     label: "Settings",
     icon: Settings,
-    isActive: false,
   },
 ]
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  activeItem?: (typeof navigationItems)[number]["label"]
+}
+
+export function AppSidebar({ activeItem = "Dashboard" }: AppSidebarProps) {
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -60,7 +63,7 @@ export function AppSidebar() {
         <button
           type="button"
           disabled
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r cursor-pointer from-[#000EB6] to-[#2532D3] text-sm font-medium text-white shadow-[0_20px_36px_-24px_rgba(0,14,182,0.75)] disabled:opacity-100"
+          className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#000EB6] to-[#2532D3] text-sm font-medium text-white shadow-[0_20px_36px_-24px_rgba(0,14,182,0.75)] disabled:opacity-100"
         >
           <Plus className="size-4" />
           <span>New Meeting</span>
@@ -74,19 +77,29 @@ export function AppSidebar() {
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.label} className="relative">
                   <SidebarMenuButton
-                    isActive={item.isActive}
+                    asChild={Boolean(item.href)}
+                    isActive={item.label === activeItem}
                     className={cn(
                       "h-11 rounded-xl px-3 text-base font-medium",
-                      item.isActive
+                      item.label === activeItem
                         ? "bg-white text-[#1b3ff2] shadow-[0_22px_24px_-28px_rgba(17,29,84,0.95)]"
                         : "text-[#666d80] hover:bg-white/70 hover:text-[#2f3545]"
                     )}
                   >
-                    <item.icon className="size-4" />
-                    <span>{item.label}</span>
+                    {item.href ? (
+                      <Link to={item.href}>
+                        <item.icon className="size-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    ) : (
+                      <>
+                        <item.icon className="size-4" />
+                        <span>{item.label}</span>
+                      </>
+                    )}
                   </SidebarMenuButton>
 
-                  {item.isActive ? (
+                  {item.label === activeItem ? (
                     <span className="absolute top-1/2 -right-3 h-8 w-1 -translate-y-1/2 rounded-full bg-[#2348f5]" />
                   ) : null}
                 </SidebarMenuItem>
